@@ -70,6 +70,7 @@ with col1:
     st.image(IMG_PATH, width=350)
 
 
+
 with col2:
     st.markdown("<h2 style='color:white;'>Welcome Back!</h2>", unsafe_allow_html=True)
 

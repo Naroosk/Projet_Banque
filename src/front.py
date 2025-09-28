@@ -1,15 +1,10 @@
 import streamlit as st
-# -----------------------------
-# VÉRIFICATION D'AUTHENTIFICATION
-# -----------------------------
-if not st.session_state.get('authenticated', False):
-    st.switch_page("pages/loginpage.py")
-
+from pathlib import Path
+from PIL import Image
 from streamlit_option_menu import option_menu
 import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
-import os
 import warnings
 
 warnings.filterwarnings('ignore')
@@ -29,6 +24,10 @@ from visualizer import (
     tracer_contributions_core_noncore_yoy,
     tracer_contributions_core_noncore_mom
 )
+
+# ---- VÉRIFICATION D'AUTHENTIFICATION ----
+if not st.session_state.get('authenticated', False):
+    st.switch_page("pages/loginpage.py")
 
 # ---- Page config ----
 st.set_page_config(page_title="Dashboard", page_icon=":bar_chart:", layout="wide")
@@ -65,9 +64,28 @@ div.block-container{
 
 st.title(":bar_chart: Dashboard Bank d'Algérie")
 
+# ------------------ NOUVELLES CONFIG DE CHEMINS -------------------
+BASE_DIR = Path(__file__).parent  # = src/
+
+# image
+IMG_PATH = BASE_DIR / "bankofalgerialogo.png"
+
+# Excel files
+NOM_FICHIER = BASE_DIR / "Fichier_de_donnes.xlsx"
+NOM_FICHIER2 = BASE_DIR / "Fichier_de_donnes_et_calculs.xlsx"
+
+FEUILLE_GRAND_ALGER = "Grand_Alger"
+FEUILLE_CORE = "core"
+FEUILLE_NON_CORE = "Produits_agricoles_frais"
+FEUILLE_CATEGORIES = "categories"
+
 # ---- Sidebar ----
 with st.sidebar:
-    st.image(r"C:\Users\HP\Downloads\BI_BA\Stage\src\bankofalgerialogo.png", use_container_width=True)
+    if IMG_PATH.exists():
+        logo = Image.open(IMG_PATH)
+        st.image(logo, use_container_width=True)
+    else:
+        st.error(f"Image non trouvée : {IMG_PATH}")
 
     selected = option_menu(
         None,
@@ -83,14 +101,6 @@ with st.sidebar:
             "nav-link-selected": {"background-color": "#0056a3"},
         }
     )
-
-# ---- Configuration des chemins ----
-NOM_FICHIER = (r"C:\Users\HP\Downloads\BI_BA\Stage\src\Fichier_de_donnes.xlsx")
-NOM_FICHIER2 = (r"C:\Users\HP\Downloads\BI_BA\Stage\src\Fichier_de_donnes_et_calculs.xlsx")
-FEUILLE_GRAND_ALGER = "Grand_Alger"
-FEUILLE_CORE = "core"
-FEUILLE_NON_CORE = "Produits_agricoles_frais"
-FEUILLE_CATEGORIES = "categories"
 
 # ---- Bouton pour exécuter tous les calculs ----
 if st.sidebar.button("🔄 Calculer toutes les données"):
@@ -135,7 +145,6 @@ date1, date2 = pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])
 df = df[(df["date"] >= date1) & (df["date"] <= date2)].copy()
 
 # ---- Contributions ----
-# Charger les données de la feuille categories pour les contributions
 df_full = pd.read_excel(NOM_FICHIER, sheet_name=FEUILLE_CATEGORIES)
 
 # ---- Nouvelles variables pour l'analyse ----
@@ -146,8 +155,6 @@ date_fin_str = date2.strftime("%Y-%m")
 col_left, col_right = st.columns([1, 3])
 
 with col_left:
-    # --- KPIs dynamiques ---
-    # ---- KPI Card function ----
     def kpi_card(title, value, delta, unit="%", up_color="#2ecc40", down_color="#ff4136"):
         arrow = "▲" if delta >= 0 else "▼"
         color = up_color if delta >= 0 else down_color
@@ -171,8 +178,6 @@ with col_left:
         </div>
         """
 
-
-    # --- KPIs dynamiques ---
     try:
         # Inflation globale
         inflation_now, inflation_prev = extraire_inflation_yoy(
@@ -200,7 +205,6 @@ with col_left:
     st.markdown(kpi_card("Core", core_now, core_now - core_prev), unsafe_allow_html=True)
     st.markdown(kpi_card("Non Core", noncore_now, noncore_now - noncore_prev), unsafe_allow_html=True)
 
-    # ---- Pie chart  ----
     st.subheader("🥧 Répartition Core vs Non Core")
     fig_pie = go.Figure(
         data=[go.Pie(
@@ -219,7 +223,6 @@ with col_left:
     st.plotly_chart(fig_pie, use_container_width=True)
 
 with col_right:
-    # ---- Main chart avec les nouvelles fonctions ----
     st.subheader("📈 Inflation du Core, Non Core et Indice global")
 
     if type_glissement == "Annuel":
@@ -243,7 +246,6 @@ with col_right:
             export_png=False
         )
 
-    # ---- Histogram chart avec les nouvelles fonctions ----
     st.subheader("📊 Contribution du Core et Non Core à l'indice global")
 
     if type_glissement == "Annuel":
@@ -262,7 +264,6 @@ with col_right:
             date_fin=date_fin_str,
             export_png=False
         )
-
 
 # ---- Navigation automatique vers les autres pages ----
 if selected == "Acceuil":
