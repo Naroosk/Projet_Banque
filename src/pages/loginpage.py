@@ -1,16 +1,23 @@
 import streamlit as st
 import pandas as pd
 import bcrypt
+import os
 
 # -----------------------------
 # Load user data from Excel
 # -----------------------------
-USER_FILE = r"C:\Users\HP\Downloads\BI_BA\Stage\src\users.xlsx"
+# dossier où se trouve loginpage.py (=> src/pages)
+BASE_DIR = os.path.dirname(__file__)
+
+# on remonte d'un cran pour arriver dans src/
+USER_FILE = os.path.join(BASE_DIR, "..", "users.xlsx")
 
 @st.cache_data
 def load_users():
-    df = pd.read_excel(USER_FILE)
-    return df
+    # construire le chemin absolu
+    excel_path = os.path.abspath(USER_FILE)
+    st.write("Chemin utilisé :", excel_path)  # pour voir sur Streamlit Cloud
+    return pd.read_excel(excel_path)
 
 users_df = load_users()
 
