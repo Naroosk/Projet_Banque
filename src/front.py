@@ -8,14 +8,7 @@ import pandas as pd
 import warnings
 import locale
 
-# Essai de mise en locale française
-try:
-    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
-except locale.Error:
-    # Si ça plante (locale non dispo sur serveur), on tombe sur locale neutre
-    locale.setlocale(locale.LC_TIME, 'C')
 
-warnings.filterwarnings('ignore')
 
 # ---- Import des fonctions de CALCUL ----
 from calculator import (
@@ -189,13 +182,13 @@ with col_left:
     try:
         # Inflation globale
         inflation_now, inflation_prev = extraire_inflation_yoy(
-            NOM_FICHIER2, FEUILLE_CATEGORIES, endDate.strftime("%Y-%m-%d")
+            NOM_FICHIER, FEUILLE_CATEGORIES, endDate.strftime("%Y-%m-%d")
         )
         core_now, core_prev = extraire_inflation_yoy(
-            NOM_FICHIER2, FEUILLE_CORE, endDate.strftime("%Y-%m-%d")
+            NOM_FICHIER, FEUILLE_CORE, endDate.strftime("%Y-%m-%d")
         )
         noncore_now, noncore_prev = extraire_inflation_yoy(
-            NOM_FICHIER2, FEUILLE_NON_CORE, endDate.strftime("%Y-%m-%d")
+            NOM_FICHIER, FEUILLE_NON_CORE, endDate.strftime("%Y-%m-%d")
         )
 
         inflation_now = float(inflation_now.replace('%', ''))
