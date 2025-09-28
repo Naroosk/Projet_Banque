@@ -16,7 +16,7 @@ USER_FILE = os.path.join(BASE_DIR, "..", "users.xlsx")
 def load_users():
     # construire le chemin absolu
     excel_path = os.path.abspath(USER_FILE)
-    st.write("Chemin utilisé :", excel_path)  # pour voir sur Streamlit Cloud
+
     return pd.read_excel(excel_path)
 
 users_df = load_users()

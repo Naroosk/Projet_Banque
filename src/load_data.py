@@ -9,21 +9,20 @@ def lire_feuille_wide(nom_fichier: str, feuille: str) -> pd.DataFrame:
         feuille (str): nom de la feuille à lire.
 
     Returns:
-        pd.DataFrame: DataFrame avec 'Date' comme index et colonnes = catégories.
+        pd.DataFrame: DataFrame avec une colonne 'date' et colonnes = catégories.
     """
     # Charger la feuille
     df = pd.read_excel(nom_fichier, sheet_name=feuille)
 
-    # Renommer la première colonne en "Date" (sécurité)
-    df.rename(columns={df.columns[0]: "Date"}, inplace=True)
+    # Renommer la première colonne en "date" (minuscule pour uniformité)
+    df.rename(columns={df.columns[0]: "date"}, inplace=True)
 
-    # Conversion en datetime (format jour/mois/année dans ton fichier)
-    df["Date"] = pd.to_datetime(df["Date"], format="%d/%m/%Y", errors="coerce")
+    # Conversion en datetime (format jour/mois/année)
+    df["date"] = pd.to_datetime(df["date"], format="%d/%m/%Y", errors="coerce")
 
-    # Mettre Date comme index
-    df.set_index("Date", inplace=True)
-
+    # ⚠️ Ne pas mettre en index ici → on garde la colonne 'date'
     return df
+
 
 def extraire_poids(poids_dict):
     """
@@ -50,4 +49,3 @@ def extraire_poids(poids_dict):
             print(f"⚠️ Format inattendu pour {key}: {value}")
 
     return result
-
