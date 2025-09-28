@@ -1,18 +1,14 @@
 import streamlit as st
+from streamlit_option_menu import option_menu
+import pandas as pd
 
 # -----------------------------
 # VÉRIFICATION D'AUTHENTIFICATION
 # -----------------------------
 if not st.session_state.get('authenticated', False):
-    st.switch_page("loginpage.py")
+    st.switch_page("pages/loginpage.py")
 
-from streamlit_option_menu import option_menu
-import pandas as pd
-import plotly.figure_factory as ff
-import plotly.express as px
-import os
-
-# ---- Import des nouvelles fonctions
+# ---- Import des nouvelles fonctions ----
 from calculator import (
     pipeline_global,
     extraire_inflation_mom,
@@ -32,6 +28,7 @@ from visualizer import (
 
 # ---- Page config ----
 st.set_page_config(page_title="Dashboard - Groupes", page_icon=":bar_chart:", layout="wide")
+
 # Masquer le menu de navigation par défaut de Streamlit
 hide_pages_style = """
     <style>
@@ -68,7 +65,8 @@ st.title(":bar_chart: Dashboard - Groupes")
 
 # ---- Sidebar ----
 with st.sidebar:
-    st.image(r"C:\Users\HP\Downloads\BI_BA\Stage\src\bankofalgerialogo.PNG", use_container_width=True)
+    # chemin relatif (place le logo dans src/)
+    st.image("src/bankofalgerialogo.png", use_container_width=True)
 
     selected = option_menu(
         None,
@@ -86,7 +84,8 @@ with st.sidebar:
     )
 
 # ---- Configuration des chemins ----
-NOM_FICHIER = (r"C:\Users\HP\Downloads\BI_BA\Stage\src\Fichier_de_donnes.xlsx")
+# chemin relatif à ton projet
+NOM_FICHIER = "src/Fichier_de_donnes.xlsx"
 FEUILLE_GRAND_ALGER = "Grand_Alger"
 FEUILLE_NATIONAL = "national"
 
@@ -160,6 +159,6 @@ with col_right:
 
 # ---- Navigation vers les autres pages ----
 if selected == "Acceuil":
-    st.switch_page("front.py")
+    st.switch_page("src/front.py")       # front.py est dans src/
 elif selected == "Catégories":
-    st.switch_page("pages/categories.py")
+    st.switch_page("src/pages/categories.py")

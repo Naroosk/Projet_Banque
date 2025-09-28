@@ -1,21 +1,11 @@
 import streamlit as st
-# -----------------------------
-# VÉRIFICATION D'AUTHENTIFICATION
-# -----------------------------
-if not st.session_state.get('authenticated', False):
-    st.switch_page("pages/loginpage.py")
 from streamlit_option_menu import option_menu
 import pandas as pd
-import plotly.figure_factory as ff
-import plotly.express as px
 import os
 
-# -----------------------------
-# VÉRIFICATION D'AUTHENTIFICATION
-# -----------------------------
+# ---- VÉRIFICATION D'AUTHENTIFICATION ----
 if not st.session_state.get('authenticated', False):
-    st.switch_page("loginpage.py")
-
+    st.switch_page("pages/loginpage.py")
 
 # ---- Import des nouvelles fonctions ----
 from calculator import (
@@ -32,8 +22,11 @@ from visualizer import (
 )
 
 # ---- Page config ----
-st.set_page_config(page_title="Dashboard - Catégories", page_icon=":bar_chart:", layout="wide")
-# Masquer le menu de navigation par défaut de Streamlit
+st.set_page_config(page_title="Dashboard - Catégories",
+                   page_icon=":bar_chart:",
+                   layout="wide")
+
+# ---- Masquer menu latéral par défaut ----
 hide_pages_style = """
     <style>
     div[data-testid="stSidebarNav"] {display: none;}
@@ -69,7 +62,8 @@ st.title(":bar_chart: Dashboard - Catégories")
 
 # ---- Sidebar ----
 with st.sidebar:
-    st.image(r"C:\Users\HP\Downloads\BI_BA\Stage\src\bankofalgerialogo.PNG", use_container_width=True)
+    # chemin relatif à ce fichier
+    st.image("src/bankofalgerialogo.png", use_container_width=True)
 
     selected = option_menu(
         None,
@@ -87,7 +81,7 @@ with st.sidebar:
     )
 
 # ---- Configuration des chemins ----
-NOM_FICHIER = (r"C:\Users\HP\Downloads\BI_BA\Stage\src\Fichier_de_donnes.xlsx")
+NOM_FICHIER = "src/Fichier_de_donnes.xlsx"
 FEUILLE_CATEGORIES = "categories"
 
 # ---- Bouton pour exécuter tous les calculs ----
@@ -165,8 +159,8 @@ with col_right:
             export_png=False
         )
 
-# ---- Navigation vers les autres pages ----
+# ---- Navigation ----
 if selected == "Acceuil":
-    st.switch_page("front.py")           # front.py est dans src/
+    st.switch_page("src/front.py")     # front.py est dans src/
 elif selected == "Groupes":
-    st.switch_page("pages/groupes.py")
+    st.switch_page("src/pages/groupes.py")
