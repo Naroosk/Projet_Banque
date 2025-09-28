@@ -213,7 +213,7 @@ with col_left:
     st.markdown(kpi_card("Core", core_now, core_now - core_prev), unsafe_allow_html=True)
     st.markdown(kpi_card("Non Core", noncore_now, noncore_now - noncore_prev), unsafe_allow_html=True)
 
-    st.subheader("🥧 Répartition Core vs Non Core")
+    st.subheader(" Répartition Core vs Non Core")
     fig_pie = go.Figure(
         data=[go.Pie(
             labels=['Core', 'Non Core'],
