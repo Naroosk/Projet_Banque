@@ -21,6 +21,14 @@ def load_users():
 
 users_df = load_users()
 
+# Masquer le menu de navigation par défaut de Streamlit
+hide_pages_style = """
+    <style>
+    div[data-testid="stSidebarNav"] {display: none;}
+    </style>
+"""
+st.markdown(hide_pages_style, unsafe_allow_html=True)
+
 # -----------------------------
 # Page Styling
 # -----------------------------

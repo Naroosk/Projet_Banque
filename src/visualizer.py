@@ -4,12 +4,24 @@ import plotly.graph_objects as go
 import streamlit as st
 import locale
 import zipfile
+from babel.dates import format_date
+# --- dictionnaire mois anglais vers français
+mois_fr = {
+    "Jan": "janv.",
+    "Feb": "févr.",
+    "Mar": "mars",
+    "Apr": "avr.",
+    "May": "mai",
+    "Jun": "juin",
+    "Jul": "juil.",
+    "Aug": "août",
+    "Sep": "sept.",
+    "Oct": "oct.",
+    "Nov": "nov.",
+    "Dec": "déc."
+}
 
-try:
-    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
-except locale.Error:
-    # fallback anglais
-    locale.setlocale(locale.LC_TIME, 'C')
+
 
 def safe_read_excel(path, **kwargs):
     """Lit un fichier Excel, même s'il est contenu dans un .zip"""
@@ -82,16 +94,9 @@ def tracer_inflation_dashboard_yoy(nom_fichier: str,
     df_noncore = df_noncore.loc[real_start:date_fin_dt]
 
     # --- 5. Axe X avec labels en FR
-    try:
-        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")  # Linux/Mac
-    except:
-        try:
-            locale.setlocale(locale.LC_TIME, "French_France.1252")  # Windows
-        except:
-            st.warning("⚠️ Impossible de définir la locale française, les mois resteront en anglais.")
-
     x = df_global.index.to_period("M").to_timestamp(how="start")
-    x_labels = x.strftime("%b %Y")  # Ex: janv. 2023
+    # Labels en français avec Babel (MMM yyyy)
+    x_labels = [format_date(d, format='MMM yyyy', locale='fr') for d in x]
 
     # --- 6. Création du graphique interactif
     fig = go.Figure()
