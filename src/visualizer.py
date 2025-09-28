@@ -77,7 +77,17 @@ def tracer_inflation_dashboard_yoy(nom_fichier: str,
     df_core = df_core.loc[real_start:date_fin_dt]
     df_noncore = df_noncore.loc[real_start:date_fin_dt]
 
+    # --- 5. Axe X avec labels en FR
+    try:
+        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")  # Linux/Mac
+    except:
+        try:
+            locale.setlocale(locale.LC_TIME, "French_France.1252")  # Windows
+        except:
+            st.warning("⚠️ Impossible de définir la locale française, les mois resteront en anglais.")
 
+    x = df_global.index.to_period("M").to_timestamp(how="start")
+    x_labels = x.strftime("%b %Y")  # Ex: janv. 2023
 
     # --- 6. Création du graphique interactif
     fig = go.Figure()
