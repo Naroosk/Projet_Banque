@@ -160,7 +160,8 @@ with col_right:
         )
 
 # ---- Navigation ----
+
 if selected == "Acceuil":
-    st.switch_page("src/front.py")     # front.py est dans src/
+    st.switch_page("front.py")
 elif selected == "Groupes":
-    st.switch_page("src/pages/groupes.py")
+    st.switch_page("pages/groupes.py")

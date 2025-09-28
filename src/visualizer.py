@@ -5,6 +5,7 @@ import streamlit as st
 import locale
 import zipfile
 
+
 def safe_read_excel(path, **kwargs):
     """Lit un fichier Excel, même s'il est contenu dans un .zip"""
     if path.endswith(".zip"):

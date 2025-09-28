@@ -1,6 +1,9 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 import pandas as pd
+import locale
+
+
 
 # -----------------------------
 # VÉRIFICATION D'AUTHENTIFICATION
@@ -158,7 +161,8 @@ with col_right:
             tracer_inflation_contributions_national_mom(NOM_FICHIER, date1.strftime("%Y-%m"), date2.strftime("%Y-%m"), export_png=False)
 
 # ---- Navigation vers les autres pages ----
+
 if selected == "Acceuil":
-    st.switch_page("src/front.py")       # front.py est dans src/
+    st.switch_page("front.py")
 elif selected == "Catégories":
-    st.switch_page("src/pages/categories.py")
+    st.switch_page("pages/categories.py")

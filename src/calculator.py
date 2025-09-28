@@ -5,6 +5,14 @@ import os
 import shutil
 from pathlib import Path
 from openpyxl import load_workbook
+import locale
+
+# Essai de mise en locale française
+try:
+    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+except locale.Error:
+    # Si ça plante (locale non dispo sur serveur), on tombe sur locale neutre
+    locale.setlocale(locale.LC_TIME, 'C')
 
 from load_data import lire_feuille_wide, extraire_poids  # import direct
 

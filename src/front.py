@@ -6,6 +6,14 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import warnings
+import locale
+
+# Essai de mise en locale française
+try:
+    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+except locale.Error:
+    # Si ça plante (locale non dispo sur serveur), on tombe sur locale neutre
+    locale.setlocale(locale.LC_TIME, 'C')
 
 warnings.filterwarnings('ignore')
 
