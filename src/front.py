@@ -219,7 +219,7 @@ with col_left:
             labels=['Core', 'Non Core'],
             values=[core_now, noncore_now],
             hole=.4,
-            marker=dict(colors=['#FFA500', '#2ECC40'])
+            marker=dict(colors=['#FFA500', '#228B22'])
         )]
     )
     fig_pie.update_layout(
