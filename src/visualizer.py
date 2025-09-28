@@ -5,6 +5,11 @@ import streamlit as st
 import locale
 import zipfile
 
+try:
+    locale.setlocale(locale.LC_TIME, 'fr_FR.UTF-8')
+except locale.Error:
+    # fallback anglais
+    locale.setlocale(locale.LC_TIME, 'C')
 
 def safe_read_excel(path, **kwargs):
     """Lit un fichier Excel, même s'il est contenu dans un .zip"""
