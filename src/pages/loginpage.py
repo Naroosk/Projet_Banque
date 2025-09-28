@@ -64,7 +64,11 @@ st.markdown(page_bg, unsafe_allow_html=True)
 col1, col2 = st.columns([1,1])  # left = logo, right = login form
 
 with col1:
-    st.image(r"C:\Users\HP\Downloads\BI_BA\Stage\src\bankofalgerialogo.png", width=350)  # logo on the left
+    BASE_DIR = os.path.dirname(__file__)  # src/pages
+    IMG_PATH = os.path.join(BASE_DIR, "..", "bankofalgerialogo.png")
+
+    st.image(IMG_PATH, width=350)
+
 
 with col2:
     st.markdown("<h2 style='color:white;'>Welcome Back!</h2>", unsafe_allow_html=True)
