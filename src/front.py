@@ -189,13 +189,13 @@ with col_left:
     try:
         # Inflation globale
         inflation_now, inflation_prev = extraire_inflation_yoy(
-            NOM_FICHIER, FEUILLE_CATEGORIES, endDate.strftime("%Y-%m-%d")
+            NOM_FICHIER2, FEUILLE_CATEGORIES, endDate.strftime("%Y-%m-%d")
         )
         core_now, core_prev = extraire_inflation_yoy(
-            NOM_FICHIER, FEUILLE_CORE, endDate.strftime("%Y-%m-%d")
+            NOM_FICHIER2, FEUILLE_CORE, endDate.strftime("%Y-%m-%d")
         )
         noncore_now, noncore_prev = extraire_inflation_yoy(
-            NOM_FICHIER, FEUILLE_NON_CORE, endDate.strftime("%Y-%m-%d")
+            NOM_FICHIER2, FEUILLE_NON_CORE, endDate.strftime("%Y-%m-%d")
         )
 
         inflation_now = float(inflation_now.replace('%', ''))
@@ -276,5 +276,7 @@ with col_right:
 # ---- Navigation automatique vers les autres pages ----
 if selected == "Acceuil":
     st.switch_page("front.py")
+elif selected == "Groupes":
+    st.switch_page("pages/groupes.py")
 elif selected == "Catégories":
     st.switch_page("pages/categories.py")
