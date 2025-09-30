@@ -189,7 +189,6 @@ with col_right:
             date_fin=date_fin_str,
             export_png=False
         )
-    st.plotly_chart(fig, use_container_width=True)
 
     st.subheader("📊 Contribution du Core et Non Core à l'indice global")
     if type_glissement == "Annuel":
@@ -208,7 +207,7 @@ with col_right:
             date_fin=date_fin_str,
             export_png=False
         )
-    st.plotly_chart(fig_contrib, use_container_width=True)
+
 
 # ---- Navigation ----
 if selected == "Acceuil":
