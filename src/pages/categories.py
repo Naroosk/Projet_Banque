@@ -22,7 +22,7 @@ from visualizer import (
 )
 
 # ---- Page config ----
-st.set_page_config(page_title="Dashboard - Catégories",
+st.set_page_config(page_title="Tabeau de bord - Catégories",
                    page_icon=":bar_chart:",
                    layout="wide")
 
@@ -58,7 +58,7 @@ div.block-container{
 """, unsafe_allow_html=True)
 
 # ---- Title ----
-st.title(":bar_chart: Dashboard - Catégories")
+st.title(":bar_chart: Tableau de bord - Catégories")
 
 # ---- Sidebar ----
 with st.sidebar:
@@ -103,7 +103,7 @@ endDate = df["date"].max().date()
 col1, col2, col3 = st.columns([2, 2, 6])
 
 with col1:
-    region = st.selectbox("Région", options=["Grand Alger", "National"])
+    region = st.selectbox("Portée", options=["Grand Alger", "National"])
 
 with col2:
     type_glissement = st.selectbox("Type de glissement", options=["Annuel", "Mensuel"])

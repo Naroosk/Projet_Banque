@@ -89,7 +89,7 @@ with col2:
             st.warning("⚠️ Veuillez saisir à la fois votre nom d'utilisateur et votre mot de passe.")
         else:
             if username in users_df['username'].values:
-                stored_password = users_df.loc[users_df["Nom d'utilisateur "] == username, 'Mot de passe'].values[0]
+                stored_password = users_df.loc[users_df["username"] == username, "password"].values[0]
                 if str(password) == str(stored_password):
                     st.success(f"✅ Bienvenue {username}!")
                     st.session_state.authenticated = True

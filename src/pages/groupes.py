@@ -64,7 +64,7 @@ div.block-container{
 """, unsafe_allow_html=True)
 
 # ---- Title ----
-st.title(":bar_chart: Dashboard - Groupes")
+st.title(":bar_chart: Tableau de bord - Groupes")
 
 # ---- Sidebar ----
 with st.sidebar:
@@ -102,7 +102,7 @@ if st.sidebar.button("🔄 Calculer toutes les données"):
             st.sidebar.error(f"❌ Erreur: {str(e)}")
 
 # ---- Chargement des données ----
-region = st.selectbox("Région", options=["Grand Alger", "National"], key="region")
+region = st.selectbox("Portée", options=["Grand Alger", "National"], key="region")
 sheet_name = FEUILLE_GRAND_ALGER if region == "Grand Alger" else FEUILLE_NATIONAL
 
 df = pd.read_excel(NOM_FICHIER, sheet_name=sheet_name)
