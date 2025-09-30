@@ -161,18 +161,32 @@ with col_left:
         </div>
         """
 
-    try:
-        # ⚠️ Ici on utilise NOM_FICHIER2 pour les KPI
-        inflation_now, inflation_prev = extraire_inflation_yoy(
-            NOM_FICHIER2, FEUILLE_CATEGORIES, endDate.strftime("%Y-%m-%d")
-        )
-        core_now, core_prev = extraire_inflation_yoy(
-            NOM_FICHIER2, FEUILLE_CORE, endDate.strftime("%Y-%m-%d")
-        )
-        noncore_now, noncore_prev = extraire_inflation_yoy(
-            NOM_FICHIER2, FEUILLE_NON_CORE, endDate.strftime("%Y-%m-%d")
-        )
 
+    try:
+        if type_glissement == "Annuel":
+            # ⚠️ Annuel → utiliser YOY
+            inflation_now, inflation_prev = extraire_inflation_yoy(
+                NOM_FICHIER2, FEUILLE_CATEGORIES, endDate.strftime("%Y-%m-%d")
+            )
+            core_now, core_prev = extraire_inflation_yoy(
+                NOM_FICHIER2, FEUILLE_CORE, endDate.strftime("%Y-%m-%d")
+            )
+            noncore_now, noncore_prev = extraire_inflation_yoy(
+                NOM_FICHIER2, FEUILLE_NON_CORE, endDate.strftime("%Y-%m-%d")
+            )
+        else:
+            # ⚠️ Mensuel → utiliser MOM
+            inflation_now, inflation_prev = extraire_inflation_mom(
+                NOM_FICHIER2, FEUILLE_CATEGORIES, endDate.strftime("%Y-%m-%d")
+            )
+            core_now, core_prev = extraire_inflation_mom(
+                NOM_FICHIER2, FEUILLE_CORE, endDate.strftime("%Y-%m-%d")
+            )
+            noncore_now, noncore_prev = extraire_inflation_mom(
+                NOM_FICHIER2, FEUILLE_NON_CORE, endDate.strftime("%Y-%m-%d")
+            )
+
+        # Conversion en float
         inflation_now = float(inflation_now.replace('%', ''))
         inflation_prev = float(inflation_prev)
         core_now = float(core_now.replace('%', ''))
