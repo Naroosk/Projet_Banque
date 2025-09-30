@@ -103,6 +103,7 @@ with col_left:
             padding:25px;
             border-radius:12px;
             text-align:center;
+            width:100%;
             margin-bottom:15px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             ">
@@ -117,7 +118,7 @@ with col_left:
         """
 
     try:
-        # ⚠️ Ici on utilise NOM_FICHIER2 pour extraire les KPIs
+        # Inflation globale
         inflation_now, inflation_prev = extraire_inflation_yoy(
             NOM_FICHIER2, FEUILLE_CATEGORIES, endDate.strftime("%Y-%m-%d")
         )
@@ -137,31 +138,38 @@ with col_left:
 
     except Exception as e:
         st.error(f"Erreur lors du calcul des KPIs: {e}")
-        inflation_now = inflation_prev = core_now = core_prev = noncore_now = noncore_prev = 0
+        inflation_now, inflation_prev, core_now, core_prev, noncore_now, noncore_prev = 0, 0, 0, 0, 0, 0
 
     st.markdown(kpi_card("Inflation", inflation_now, inflation_now - inflation_prev), unsafe_allow_html=True)
     st.markdown(kpi_card("Core", core_now, core_now - core_prev), unsafe_allow_html=True)
     st.markdown(kpi_card("Non Core", noncore_now, noncore_now - noncore_prev), unsafe_allow_html=True)
 
-    # Camembert Core vs Non Core
-    st.subheader("Répartition Core vs Non Core")
+    # 🥧 Camembert corrigé
+    st.subheader(" Répartition Core vs Non Core")
+    reste_noncore = max(0, 100 - core_now)  # le reste du 100%
     fig_pie = go.Figure(
         data=[go.Pie(
             labels=['Core', 'Non Core'],
-            values=[core_now, noncore_now],
+            values=[core_now, reste_noncore],
             hole=.4,
             marker=dict(colors=['#FFA500', '#228B22'])
         )]
     )
-    fig_pie.update_layout(template='plotly_dark', showlegend=True,
-                          margin=dict(l=1, r=1, t=30, b=1), height=250)
+    fig_pie.update_layout(
+        template='plotly_dark',
+        showlegend=True,
+        margin=dict(l=1, r=1, t=30, b=1),
+        height=250
+    )
     st.plotly_chart(fig_pie, use_container_width=True)
+
 
 with col_right:
     st.subheader("📈 Inflation du Core, Non Core et Indice global")
+
     if type_glissement == "Annuel":
-        fig = tracer_inflation_dashboard_yoy(
-            nom_fichier=NOM_FICHIER,
+        fig_inflation = tracer_inflation_dashboard_yoy(
+            nom_fichier=NOM_FICHIER2,
             feuille_categories=FEUILLE_CATEGORIES,
             feuille_core=FEUILLE_CORE,
             feuille_non_core=FEUILLE_NON_CORE,
@@ -170,8 +178,8 @@ with col_right:
             export_png=False
         )
     else:
-        fig = tracer_inflation_dashboard_mom(
-            nom_fichier=NOM_FICHIER,
+        fig_inflation = tracer_inflation_dashboard_mom(
+            nom_fichier=NOM_FICHIER2,
             feuille_categories=FEUILLE_CATEGORIES,
             feuille_core=FEUILLE_CORE,
             feuille_non_core=FEUILLE_NON_CORE,
@@ -179,12 +187,14 @@ with col_right:
             date_fin=date_fin_str,
             export_png=False
         )
-    st.plotly_chart(fig, use_container_width=True)
+
+    st.plotly_chart(fig_inflation, use_container_width=True, key="inflation_chart")
 
     st.subheader("📊 Contribution du Core et Non Core à l'indice global")
+
     if type_glissement == "Annuel":
         fig_contrib = tracer_contributions_core_noncore_yoy(
-            nom_fichier=NOM_FICHIER,
+            nom_fichier=NOM_FICHIER2,
             feuille_categories=FEUILLE_CATEGORIES,
             date_debut=date_debut_str,
             date_fin=date_fin_str,
@@ -192,13 +202,14 @@ with col_right:
         )
     else:
         fig_contrib = tracer_contributions_core_noncore_mom(
-            nom_fichier=NOM_FICHIER,
+            nom_fichier=NOM_FICHIER2,
             feuille_categories=FEUILLE_CATEGORIES,
             date_debut=date_debut_str,
             date_fin=date_fin_str,
             export_png=False
         )
-    st.plotly_chart(fig_contrib, use_container_width=True)
+
+    st.plotly_chart(fig_contrib, use_container_width=True, key="contrib_chart")
 
 # ---- Navigation ----
 if selected == "Acceuil":
