@@ -106,7 +106,7 @@ with st.sidebar:
             try:
                 from calculator import pipeline_global
 
-                pipeline_global(NOM_FICHIER2)  # ⚠️ fichier des calculs
+                pipeline_global(NOM_FICHIER)  # ⚠️ fichier des calculs
                 st.sidebar.success("✅ Calculs terminés avec succès!")
                 st.stop()  # ⛔ arrête ici pour éviter un recalcul infini
             except Exception as e:
