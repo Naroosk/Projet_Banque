@@ -100,18 +100,7 @@ with st.sidebar:
             "nav-link-selected": {"background-color": "#0056a3"},
         }
     )
-    # ---- Bouton pour exécuter tous les calculs ----
-    if st.sidebar.button("🔄 Calculer toutes les données"):
-        with st.spinner("Calcul en cours..."):
-            try:
-                from calculator import pipeline_global
 
-                pipeline_global(NOM_FICHIER)  # ⚠️ fichier des calculs
-                st.sidebar.success("✅ Calculs terminés avec succès!")
-                st.stop()  # ⛔ arrête ici pour éviter un recalcul infini
-            except Exception as e:
-                st.sidebar.error(f"❌ Erreur: {str(e)}")
-                st.stop()
 
 # ---- Load data from Grand_Alger sheet ----
 df = pd.read_excel(NOM_FICHIER, sheet_name=FEUILLE_GRAND_ALGER)
