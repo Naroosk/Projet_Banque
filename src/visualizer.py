@@ -307,13 +307,7 @@ def tracer_contributions_core_noncore_yoy(nom_fichier: str,
     df = df.loc[real_start:date_fin_dt]
 
     # --- 4. Axe X FR
-    try:
-        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
-    except:
-        try:
-            locale.setlocale(locale.LC_TIME, "French_France.1252")
-        except:
-            st.warning("⚠️ Locale FR non dispo, les mois resteront en anglais.")
+
 
     x = df.index.to_period("M").to_timestamp(how="start")
     x_labels = x.strftime("%b %Y")
@@ -411,13 +405,7 @@ def tracer_contributions_core_noncore_mom(nom_fichier: str,
     df = df.loc[real_start:date_fin_dt]
 
     # --- 4. Axe X FR
-    try:
-        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
-    except:
-        try:
-            locale.setlocale(locale.LC_TIME, "French_France.1252")
-        except:
-            st.warning("⚠️ Locale FR non dispo, les mois resteront en anglais.")
+
 
     x = df.index.to_period("M").to_timestamp(how="start")
     x_labels = x.strftime("%b %Y")
@@ -539,13 +527,7 @@ def tracer_inflation_grand_alger_mom(nom_fichier: str,
     df = df.loc[real_start:date_fin_dt]
 
     # --- 5. Axe X FR
-    try:
-        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")  # Linux/Mac
-    except:
-        try:
-            locale.setlocale(locale.LC_TIME, "French_France.1252")  # Windows
-        except:
-            st.warning("⚠️ Locale FR non disponible, mois en anglais.")
+
 
     x = df.index.to_period("M").to_timestamp(how="start")
     x_labels = x.strftime("%b %Y")
@@ -665,13 +647,7 @@ def tracer_inflation_grand_alger_yoy(nom_fichier: str,
     df = df.loc[real_start:date_fin_dt]
 
     # --- 5. Axe X FR
-    try:
-        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")  # Linux/Mac
-    except:
-        try:
-            locale.setlocale(locale.LC_TIME, "French_France.1252")  # Windows
-        except:
-            st.warning("⚠️ Locale FR non disponible, mois en anglais.")
+
 
     x = df.index.to_period("M").to_timestamp(how="start")
     x_labels = x.strftime("%b %Y")
@@ -788,13 +764,7 @@ def tracer_inflation_contributions_grand_alger_mom(
     df = df.loc[real_start:date_fin_dt]
 
     # --- 5. Axe X FR
-    try:
-        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
-    except:
-        try:
-            locale.setlocale(locale.LC_TIME, "French_France.1252")
-        except:
-            st.warning("⚠️ Locale FR non dispo, mois en anglais.")
+
 
     x = df.index.to_period("M").to_timestamp(how="start")
     x_labels = x.strftime("%b %Y")
@@ -900,13 +870,7 @@ def tracer_inflation_contributions_grand_alger_yoy(
     df = df.loc[real_start:date_fin_dt]
 
     # --- 5. Axe X FR
-    try:
-        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
-    except:
-        try:
-            locale.setlocale(locale.LC_TIME, "French_France.1252")
-        except:
-            st.warning("⚠️ Locale FR non dispo, mois en anglais.")
+
 
     x = df.index.to_period("M").to_timestamp(how="start")
     x_labels = x.strftime("%b %Y")
@@ -1016,13 +980,7 @@ def tracer_inflation_national_mom(nom_fichier: str,
     df = df.loc[real_start:date_fin_dt]
 
     # --- 5. Axe X FR
-    try:
-        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")  # Linux/Mac
-    except:
-        try:
-            locale.setlocale(locale.LC_TIME, "French_France.1252")  # Windows
-        except:
-            st.warning("⚠️ Locale FR non disponible, mois en anglais.")
+
 
     x = df.index.to_period("M").to_timestamp(how="start")
     x_labels = x.strftime("%b %Y")
@@ -1142,13 +1100,7 @@ def tracer_inflation_national_yoy(nom_fichier: str,
     df = df.loc[real_start:date_fin_dt]
 
     # --- 5. Axe X FR
-    try:
-        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")  # Linux/Mac
-    except:
-        try:
-            locale.setlocale(locale.LC_TIME, "French_France.1252")  # Windows
-        except:
-            st.warning("⚠️ Locale FR non disponible, mois en anglais.")
+
 
     x = df.index.to_period("M").to_timestamp(how="start")
     x_labels = x.strftime("%b %Y")
@@ -1265,13 +1217,7 @@ def tracer_inflation_contributions_national_mom(
     df = df.loc[real_start:date_fin_dt]
 
     # --- 5. Axe X FR
-    try:
-        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
-    except:
-        try:
-            locale.setlocale(locale.LC_TIME, "French_France.1252")
-        except:
-            st.warning("⚠️ Locale FR non dispo, mois en anglais.")
+
 
     x = df.index.to_period("M").to_timestamp(how="start")
     x_labels = x.strftime("%b %Y")
@@ -1377,13 +1323,6 @@ def tracer_inflation_contributions_national_yoy(
     df = df.loc[real_start:date_fin_dt]
 
     # --- 5. Axe X FR
-    try:
-        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
-    except:
-        try:
-            locale.setlocale(locale.LC_TIME, "French_France.1252")
-        except:
-            st.warning("⚠️ Locale FR non dispo, mois en anglais.")
 
     x = df.index.to_period("M").to_timestamp(how="start")
     x_labels = x.strftime("%b %Y")
@@ -1492,13 +1431,7 @@ def tracer_inflation_categories_mom(nom_fichier: str,
     df = df.loc[real_start:date_fin_dt]
 
     # --- 5. Axe X FR
-    try:
-        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")  # Linux/Mac
-    except:
-        try:
-            locale.setlocale(locale.LC_TIME, "French_France.1252")  # Windows
-        except:
-            st.warning("⚠️ Locale FR non disponible, mois en anglais.")
+
 
     x = df.index.to_period("M").to_timestamp(how="start")
     x_labels = x.strftime("%b %Y")
@@ -1615,13 +1548,7 @@ def tracer_inflation_categories_yoy(nom_fichier: str,
     df = df.loc[real_start:date_fin_dt]
 
     # --- 5. Axe X FR
-    try:
-        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")  # Linux/Mac
-    except:
-        try:
-            locale.setlocale(locale.LC_TIME, "French_France.1252")  # Windows
-        except:
-            st.warning("⚠️ Locale FR non disponible, mois en anglais.")
+
 
     x = df.index.to_period("M").to_timestamp(how="start")
     x_labels = x.strftime("%b %Y")
@@ -1844,13 +1771,6 @@ def tracer_inflation_contributions_categories_yoy(
     df = df.loc[real_start:date_fin_dt]
 
     # --- 5. Axe X FR
-    try:
-        locale.setlocale(locale.LC_TIME, "fr_FR.UTF-8")
-    except:
-        try:
-            locale.setlocale(locale.LC_TIME, "French_France.1252")
-        except:
-            st.warning("⚠️ Locale FR non dispo, mois en anglais.")
 
     x = df.index.to_period("M").to_timestamp(how="start")
     x_labels = x.strftime("%b %Y")

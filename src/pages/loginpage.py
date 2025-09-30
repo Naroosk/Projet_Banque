@@ -79,29 +79,29 @@ with col1:
     st.image(IMG_PATH, width=350)
 
 with col2:
-    st.markdown("<h2 style='color:white;'>Welcome Back!</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color:white;'>Bienvenue !</h2>", unsafe_allow_html=True)
 
-    username = st.text_input("username")
-    password = st.text_input("Password", type="password", help="Enter your password")
+    username = st.text_input("Nom d'utilisateur")
+    password = st.text_input("Mot de passe", type="password", help="Entrez votre mot de passe")
 
-    if st.button("Sign In"):
+    if st.button("Se connecter"):
         if (not username) or (not password):
-            st.warning("⚠️ Please enter both username and password.")
+            st.warning("⚠️ Veuillez saisir à la fois votre nom d'utilisateur et votre mot de passe.")
         else:
             if username in users_df['username'].values:
-                stored_password = users_df.loc[users_df['username'] == username, 'password'].values[0]
+                stored_password = users_df.loc[users_df["Nom d'utilisateur "] == username, 'Mot de passe'].values[0]
                 if str(password) == str(stored_password):
-                    st.success(f"✅ Welcome {username}!")
+                    st.success(f"✅ Bienvenue {username}!")
                     st.session_state.authenticated = True
                     st.session_state.username = username
                     st.rerun()  # redémarre pour afficher la redirection
                 else:
-                    st.error("❌ Invalid username or password.")
+                    st.error("❌ Nom d'utilisateur ou mot de passe invalide.")
             else:
-                st.error("❌ Invalid username or password.")
+                st.error("❌ Nom d'utilisateur ou mot de passe invalide.")
 
-    if st.button("Forgot my password", key="forgot_pwd"):
-        st.info("🔒 Please contact administrator to reset your password")
+    if st.button("Mot de passe oublié! ", key="forgot_pwd"):
+        st.info("🔒 Veuillez contacter l'administrateur pour réinitialiser votre mot de passe")
 
 # -----------------------------
 # Redirection après connexion réussie

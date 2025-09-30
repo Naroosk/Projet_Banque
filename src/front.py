@@ -2,20 +2,13 @@ import streamlit as st
 from pathlib import Path
 from PIL import Image
 from streamlit_option_menu import option_menu
-import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
-import warnings
-import locale
-
-
 
 # ---- Import des fonctions de CALCUL ----
 from calculator import (
-    pipeline_global,
     extraire_inflation_mom,
     extraire_inflation_yoy,
-    get_max_date
 )
 
 # ---- Import des fonctions de VISUALISATION ----
@@ -26,52 +19,20 @@ from visualizer import (
     tracer_contributions_core_noncore_mom
 )
 
-# ---- VÉRIFICATION D'AUTHENTIFICATION ----
+# ---- Authentification ----
 if not st.session_state.get('authenticated', False):
     st.switch_page("pages/loginpage.py")
 
-# ---- Page config ----
+# ---- Config ----
 st.set_page_config(page_title="Dashboard", page_icon=":bar_chart:", layout="wide")
-# Masquer le menu de navigation par défaut de Streamlit
-hide_pages_style = """
-    <style>
-    div[data-testid="stSidebarNav"] {display: none;}
-    </style>
-"""
-st.markdown(hide_pages_style, unsafe_allow_html=True)
+st.markdown("<style>div[data-testid='stSidebarNav'] {display: none;}</style>", unsafe_allow_html=True)
 
-# Global CSS
-st.markdown("""
-<style>
-body, div, span, label {
-    font-family: 'Segoe UI', sans-serif;
-}
-div.block-container{
-    padding-top:1rem;
-    color: #FFFFFF;
-}
-[data-testid="stSidebar"] {
-    background-color: #0b1a2e; /* dark navy */
-    color: white;
-}
-[data-testid="stSidebar"] * {
-    color: white;
-}
-[data-testid="stSidebar"] a:hover {
-    background-color:#0056a3; /* lighter navy on hover */
-}
-</style>
-""", unsafe_allow_html=True)
+st.title(":bar_chart: Tableau de bord – Banque d’Algérie")
 
-st.title(":bar_chart: Dashboard Bank d'Algérie")
+# ------------------ CHEMINS -------------------
+BASE_DIR = Path(__file__).parent
 
-# ------------------ NOUVELLES CONFIG DE CHEMINS -------------------
-BASE_DIR = Path(__file__).parent  # = src/
-
-# image
 IMG_PATH = BASE_DIR / "bankofalgerialogo.png"
-
-# Excel files
 NOM_FICHIER = BASE_DIR / "Fichier_de_donnes.xlsx"
 NOM_FICHIER2 = BASE_DIR / "Fichier_de_donnes_et_calculs.xlsx"
 
@@ -80,11 +41,15 @@ FEUILLE_CORE = "core"
 FEUILLE_NON_CORE = "Produits_agricoles_frais"
 FEUILLE_CATEGORIES = "categories"
 
+# ---- Cache lecture Excel ----
+@st.cache_data
+def read_excel_cached(path, sheet_name=None):
+    return pd.read_excel(path, sheet_name=sheet_name)
+
 # ---- Sidebar ----
 with st.sidebar:
     if IMG_PATH.exists():
-        logo = Image.open(IMG_PATH)
-        st.image(logo, use_container_width=True)
+        st.image(Image.open(IMG_PATH), use_container_width=True)
     else:
         st.error(f"Image non trouvée : {IMG_PATH}")
 
@@ -103,58 +68,31 @@ with st.sidebar:
         }
     )
 
-# ---- Bouton pour exécuter tous les calculs ----
-if st.sidebar.button("🔄 Calculer toutes les données"):
-    with st.spinner("Calcul en cours..."):
-        try:
-            pipeline_global(NOM_FICHIER)
-            st.sidebar.success("✅ Calculs terminés avec succès!")
-        except Exception as e:
-            st.sidebar.error(f"❌ Erreur: {str(e)}")
-
-# ---- Load data from Grand_Alger sheet ----
-df = pd.read_excel(NOM_FICHIER, sheet_name=FEUILLE_GRAND_ALGER)
+# ---- Données principales ----
+df = read_excel_cached(NOM_FICHIER, sheet_name=FEUILLE_GRAND_ALGER)
 df["date"] = pd.to_datetime(df["date"])
-startDate = df["date"].min()
-endDate = df["date"].max()
+startDate, endDate = df["date"].min().date(), df["date"].max().date()
 
 col1, col2, col3 = st.columns([2, 2, 6])
-
 with col1:
-    region = st.selectbox("Région", options=["Grand Alger", "National"])
-
+    region = st.selectbox("Portée", options=["Grand Alger", "National"])
 with col2:
     type_glissement = st.selectbox("Type de glissement", options=["Annuel", "Mensuel"])
-
 with col3:
-    # Convert pandas.Timestamp → datetime.date
-    startDate = df["date"].min().date()
-    endDate = df["date"].max().date()
-
-    date_range = st.slider(
-        "Période",
-        min_value=startDate,
-        max_value=endDate,
+    date_range = st.slider("Période",
+        min_value=startDate, max_value=endDate,
         value=(startDate, endDate),
         format="YYYY-MM-DD"
     )
-
-    # Convert back to datetime for filtering
     date1, date2 = pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])
 
-date1, date2 = pd.to_datetime(date_range[0]), pd.to_datetime(date_range[1])
 df = df[(df["date"] >= date1) & (df["date"] <= date2)].copy()
+df_full = read_excel_cached(NOM_FICHIER, sheet_name=FEUILLE_CATEGORIES)
 
-# ---- Contributions ----
-df_full = pd.read_excel(NOM_FICHIER, sheet_name=FEUILLE_CATEGORIES)
+date_debut_str, date_fin_str = date1.strftime("%Y-%m"), date2.strftime("%Y-%m")
 
-# ---- Nouvelles variables pour l'analyse ----
-date_debut_str = date1.strftime("%Y-%m")
-date_fin_str = date2.strftime("%Y-%m")
-
-# ---- Layout ----
+# ---- KPI Cards ----
 col_left, col_right = st.columns([1, 3])
-
 with col_left:
     def kpi_card(title, value, delta, unit="%", up_color="#2ecc40", down_color="#ff4136"):
         arrow = "▲" if delta >= 0 else "▼"
@@ -165,7 +103,6 @@ with col_left:
             padding:25px;
             border-radius:12px;
             text-align:center;
-            width:100%;
             margin-bottom:15px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
             ">
@@ -180,15 +117,15 @@ with col_left:
         """
 
     try:
-        # Inflation globale
+        # ⚠️ Ici on utilise NOM_FICHIER2 pour extraire les KPIs
         inflation_now, inflation_prev = extraire_inflation_yoy(
-            NOM_FICHIER, FEUILLE_CATEGORIES, endDate.strftime("%Y-%m-%d")
+            NOM_FICHIER2, FEUILLE_CATEGORIES, endDate.strftime("%Y-%m-%d")
         )
         core_now, core_prev = extraire_inflation_yoy(
-            NOM_FICHIER, FEUILLE_CORE, endDate.strftime("%Y-%m-%d")
+            NOM_FICHIER2, FEUILLE_CORE, endDate.strftime("%Y-%m-%d")
         )
         noncore_now, noncore_prev = extraire_inflation_yoy(
-            NOM_FICHIER, FEUILLE_NON_CORE, endDate.strftime("%Y-%m-%d")
+            NOM_FICHIER2, FEUILLE_NON_CORE, endDate.strftime("%Y-%m-%d")
         )
 
         inflation_now = float(inflation_now.replace('%', ''))
@@ -200,13 +137,14 @@ with col_left:
 
     except Exception as e:
         st.error(f"Erreur lors du calcul des KPIs: {e}")
-        inflation_now, inflation_prev, core_now, core_prev, noncore_now, noncore_prev = 0, 0, 0, 0, 0, 0
+        inflation_now = inflation_prev = core_now = core_prev = noncore_now = noncore_prev = 0
 
     st.markdown(kpi_card("Inflation", inflation_now, inflation_now - inflation_prev), unsafe_allow_html=True)
     st.markdown(kpi_card("Core", core_now, core_now - core_prev), unsafe_allow_html=True)
     st.markdown(kpi_card("Non Core", noncore_now, noncore_now - noncore_prev), unsafe_allow_html=True)
 
-    st.subheader(" Répartition Core vs Non Core")
+    # Camembert Core vs Non Core
+    st.subheader("Répartition Core vs Non Core")
     fig_pie = go.Figure(
         data=[go.Pie(
             labels=['Core', 'Non Core'],
@@ -215,17 +153,12 @@ with col_left:
             marker=dict(colors=['#FFA500', '#228B22'])
         )]
     )
-    fig_pie.update_layout(
-        template='plotly_dark',
-        showlegend=True,
-        margin=dict(l=1, r=1, t=30, b=1),
-        height=250
-    )
+    fig_pie.update_layout(template='plotly_dark', showlegend=True,
+                          margin=dict(l=1, r=1, t=30, b=1), height=250)
     st.plotly_chart(fig_pie, use_container_width=True)
 
 with col_right:
     st.subheader("📈 Inflation du Core, Non Core et Indice global")
-
     if type_glissement == "Annuel":
         fig = tracer_inflation_dashboard_yoy(
             nom_fichier=NOM_FICHIER,
@@ -246,9 +179,9 @@ with col_right:
             date_fin=date_fin_str,
             export_png=False
         )
+    st.plotly_chart(fig, use_container_width=True)
 
     st.subheader("📊 Contribution du Core et Non Core à l'indice global")
-
     if type_glissement == "Annuel":
         fig_contrib = tracer_contributions_core_noncore_yoy(
             nom_fichier=NOM_FICHIER,
@@ -265,8 +198,9 @@ with col_right:
             date_fin=date_fin_str,
             export_png=False
         )
+    st.plotly_chart(fig_contrib, use_container_width=True)
 
-# ---- Navigation automatique vers les autres pages ----
+# ---- Navigation ----
 if selected == "Acceuil":
     st.switch_page("front.py")
 elif selected == "Groupes":
