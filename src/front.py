@@ -204,12 +204,12 @@ with col_left:
 
     # Camembert Core vs Non Core
     st.subheader("Répartition Core vs Non Core")
-    noncore_calc = 100 - core_now  # complément
+    noncore_calc = 100 - 83.08 # complément
 
     fig_pie = go.Figure(
         data=[go.Pie(
             labels=['Core', 'Non Core'],
-            values=[core_now, noncore_calc],
+            values=[83.08, noncore_calc],
             hole=.4,
             marker=dict(colors=['#FFA500', '#228B22'])  # orange core, vert non-core
         )]
