@@ -153,7 +153,7 @@ with col_left:
         ">
             <div style="font-size:20px; color:#ffffff; font-weight:600;">{title}</div>
             <div style="font-size:42px; color:#ffffff; font-weight:700;">
-                {value:.1f}{unit}
+                {value:.2f}{unit}
             </div>
             <div style="font-size:20px; color:{color}; font-weight:600;">
                 {arrow} {abs(delta):.1f}{unit}
